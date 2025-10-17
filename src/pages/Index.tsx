@@ -20,6 +20,7 @@ interface Ability {
   name: string;
   description: string;
   level: number;
+  spiritCost?: number;
 }
 
 const Index = () => {
@@ -30,12 +31,14 @@ const Index = () => {
       id: '1',
       name: 'Концентрация',
       description: 'Сконцентрировавшись восстанавливает Духовную силу если его не атаковали 12 секунд',
-      level: 3
+      level: 3,
+      spiritCost: 0
     }
   ]);
   const [newAbilityName, setNewAbilityName] = useState('');
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
+  const [newAbilitySpiritCost, setNewAbilitySpiritCost] = useState<number>(0);
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
   const [customFeatures, setCustomFeatures] = useState<Record<number, string>>({
     3: '·Концентрация\n·Блинк',
@@ -86,11 +89,13 @@ const Index = () => {
         id: Date.now().toString(),
         name: newAbilityName,
         description: newAbilityDesc,
-        level: newAbilityLevel
+        level: newAbilityLevel,
+        spiritCost: newAbilitySpiritCost
       }]);
       setNewAbilityName('');
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
+      setNewAbilitySpiritCost(0);
     }
   };
 
@@ -99,19 +104,21 @@ const Index = () => {
     setNewAbilityName(ability.name);
     setNewAbilityDesc(ability.description);
     setNewAbilityLevel(ability.level);
+    setNewAbilitySpiritCost(ability.spiritCost || 0);
   };
 
   const saveEditAbility = () => {
     if (editingAbility && newAbilityName && newAbilityDesc) {
       setAbilities(prev => prev.map(a => 
         a.id === editingAbility.id 
-          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel }
+          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel, spiritCost: newAbilitySpiritCost }
           : a
       ));
       setEditingAbility(null);
       setNewAbilityName('');
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
+      setNewAbilitySpiritCost(0);
     }
   };
 
@@ -120,6 +127,7 @@ const Index = () => {
     setNewAbilityName('');
     setNewAbilityDesc('');
     setNewAbilityLevel(1);
+    setNewAbilitySpiritCost(0);
   };
 
   const removeAbility = (id: string) => {
@@ -346,6 +354,19 @@ const Index = () => {
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="spiritCost">Трата Духа</Label>
+                  <Input
+                    id="spiritCost"
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    value={newAbilitySpiritCost}
+                    onChange={(e) => setNewAbilitySpiritCost(Number(e.target.value))}
+                    className="bg-background/50"
+                  />
+                </div>
+
                 {editingAbility ? (
                   <div className="flex gap-2">
                     <Button onClick={saveEditAbility} className="flex-1" size="lg">
@@ -394,7 +415,14 @@ const Index = () => {
                                 {ability.level}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold text-lg">{ability.name}</h4>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h4 className="font-semibold text-lg">{ability.name}</h4>
+                                  {ability.spiritCost !== undefined && ability.spiritCost > 0 && (
+                                    <span className="text-xs bg-accent/20 text-accent-foreground px-2 py-1 rounded">
+                                      Дух: {ability.spiritCost}
+                                    </span>
+                                  )}
+                                </div>
                                 <p className="text-sm text-muted-foreground mt-1">
                                   {ability.description}
                                 </p>
