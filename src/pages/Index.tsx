@@ -25,7 +25,14 @@ interface Ability {
 const Index = () => {
   const [className, setClassName] = useState('Антимаг');
   const [classDescription, setClassDescription] = useState('Неуловимый Убийца Колдунов что проявляет полностью свой потенциал в схватках где он способен оставаться неприкасаемым');
-  const [abilities, setAbilities] = useState<Ability[]>([]);
+  const [abilities, setAbilities] = useState<Ability[]>([
+    {
+      id: '1',
+      name: 'Концентрация',
+      description: 'Сконцентрировавшись восстанавливает Духовную силу если его не атаковали 12 секунд',
+      level: 3
+    }
+  ]);
   const [newAbilityName, setNewAbilityName] = useState('');
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
