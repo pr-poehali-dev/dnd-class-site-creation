@@ -21,6 +21,7 @@ interface Ability {
   description: string;
   level: number;
   spiritCost?: number;
+  conditions?: string;
 }
 
 const Index = () => {
@@ -32,13 +33,15 @@ const Index = () => {
       name: 'Концентрация',
       description: 'Сконцентрировавшись восстанавливает Духовную силу если его не атаковали 12 секунд',
       level: 3,
-      spiritCost: 0
+      spiritCost: 0,
+      conditions: ''
     }
   ]);
   const [newAbilityName, setNewAbilityName] = useState('');
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
   const [newAbilitySpiritCost, setNewAbilitySpiritCost] = useState<number>(0);
+  const [newAbilityConditions, setNewAbilityConditions] = useState('');
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
   const [customFeatures, setCustomFeatures] = useState<Record<number, string>>({
     3: '·Концентрация\n·Блинк',
@@ -90,12 +93,14 @@ const Index = () => {
         name: newAbilityName,
         description: newAbilityDesc,
         level: newAbilityLevel,
-        spiritCost: newAbilitySpiritCost
+        spiritCost: newAbilitySpiritCost,
+        conditions: newAbilityConditions
       }]);
       setNewAbilityName('');
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
       setNewAbilitySpiritCost(0);
+      setNewAbilityConditions('');
     }
   };
 
@@ -105,13 +110,14 @@ const Index = () => {
     setNewAbilityDesc(ability.description);
     setNewAbilityLevel(ability.level);
     setNewAbilitySpiritCost(ability.spiritCost || 0);
+    setNewAbilityConditions(ability.conditions || '');
   };
 
   const saveEditAbility = () => {
     if (editingAbility && newAbilityName && newAbilityDesc) {
       setAbilities(prev => prev.map(a => 
         a.id === editingAbility.id 
-          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel, spiritCost: newAbilitySpiritCost }
+          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel, spiritCost: newAbilitySpiritCost, conditions: newAbilityConditions }
           : a
       ));
       setEditingAbility(null);
@@ -119,6 +125,7 @@ const Index = () => {
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
       setNewAbilitySpiritCost(0);
+      setNewAbilityConditions('');
     }
   };
 
@@ -128,6 +135,7 @@ const Index = () => {
     setNewAbilityDesc('');
     setNewAbilityLevel(1);
     setNewAbilitySpiritCost(0);
+    setNewAbilityConditions('');
   };
 
   const removeAbility = (id: string) => {
@@ -354,17 +362,29 @@ const Index = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="spiritCost">Трата Духа</Label>
-                  <Input
-                    id="spiritCost"
-                    type="number"
-                    min="0"
-                    placeholder="0"
-                    value={newAbilitySpiritCost}
-                    onChange={(e) => setNewAbilitySpiritCost(Number(e.target.value))}
-                    className="bg-background/50"
-                  />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="spiritCost">Трата Духа</Label>
+                    <Input
+                      id="spiritCost"
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={newAbilitySpiritCost}
+                      onChange={(e) => setNewAbilitySpiritCost(Number(e.target.value))}
+                      className="bg-background/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="conditions">Условия использования</Label>
+                    <Input
+                      id="conditions"
+                      placeholder="Например: 1 раз в ход, реакция..."
+                      value={newAbilityConditions}
+                      onChange={(e) => setNewAbilityConditions(e.target.value)}
+                      className="bg-background/50"
+                    />
+                  </div>
                 </div>
 
                 {editingAbility ? (
@@ -415,11 +435,16 @@ const Index = () => {
                                 {ability.level}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
                                   <h4 className="font-semibold text-lg">{ability.name}</h4>
                                   {ability.spiritCost !== undefined && ability.spiritCost > 0 && (
                                     <span className="text-xs bg-accent/20 text-accent-foreground px-2 py-1 rounded">
                                       Дух: {ability.spiritCost}
+                                    </span>
+                                  )}
+                                  {ability.conditions && (
+                                    <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
+                                      {ability.conditions}
                                     </span>
                                   )}
                                 </div>
