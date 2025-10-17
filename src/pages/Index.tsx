@@ -30,17 +30,39 @@ const Index = () => {
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
+  const [customFeatures, setCustomFeatures] = useState<Record<number, string>>({});
+  const [editingLevel, setEditingLevel] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState('');
 
   const visibleLevels = [3, 5, 9, 12, 15, 17, 18, 20];
   
   const levelTable: LevelData[] = visibleLevels.map(level => ({
     level,
     proficiencyBonus: Math.floor((level - 1) / 4) + 2,
-    features: abilities
+    features: customFeatures[level] || abilities
       .filter(a => a.level === level)
       .map(a => a.name)
       .join(', ') || '-'
   }));
+
+  const startEditLevel = (level: number, currentText: string) => {
+    setEditingLevel(level);
+    setEditingText(currentText === '-' ? '' : currentText);
+  };
+
+  const saveCustomFeature = (level: number) => {
+    setCustomFeatures(prev => ({
+      ...prev,
+      [level]: editingText
+    }));
+    setEditingLevel(null);
+    setEditingText('');
+  };
+
+  const cancelEditLevel = () => {
+    setEditingLevel(null);
+    setEditingText('');
+  };
 
   const addAbility = () => {
     if (newAbilityName && newAbilityDesc) {
@@ -185,19 +207,62 @@ const Index = () => {
                                 {row.level}
                               </TableCell>
                               <TableCell>
-                                {levelAbilities.length > 0 ? (
-                                  <div className="flex flex-wrap gap-2">
-                                    {levelAbilities.map(ability => (
-                                      <span 
-                                        key={ability.id}
-                                        className="text-sm bg-primary/20 text-primary px-2 py-1 rounded"
+                                {editingLevel === row.level ? (
+                                  <div className="flex gap-2 items-center">
+                                    <Textarea
+                                      value={editingText}
+                                      onChange={(e) => setEditingText(e.target.value)}
+                                      className="bg-background/50 min-h-20 flex-1"
+                                      placeholder="Введите особенности уровня..."
+                                      autoFocus
+                                    />
+                                    <div className="flex flex-col gap-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() => saveCustomFeature(row.level)}
                                       >
-                                        {ability.name}
-                                      </span>
-                                    ))}
+                                        <Icon name="Check" size={16} />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={cancelEditLevel}
+                                      >
+                                        <Icon name="X" size={16} />
+                                      </Button>
+                                    </div>
                                   </div>
                                 ) : (
-                                  <span className="text-muted-foreground">-</span>
+                                  <div 
+                                    className="cursor-pointer hover:bg-muted/20 p-2 rounded transition-colors min-h-12 flex items-center group"
+                                    onClick={() => startEditLevel(row.level, row.features)}
+                                  >
+                                    {customFeatures[row.level] ? (
+                                      <div className="flex items-start justify-between w-full gap-2">
+                                        <span className="whitespace-pre-wrap flex-1">{customFeatures[row.level]}</span>
+                                        <Icon name="Pencil" size={16} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-muted-foreground" />
+                                      </div>
+                                    ) : levelAbilities.length > 0 ? (
+                                      <div className="flex items-center justify-between w-full gap-2">
+                                        <div className="flex flex-wrap gap-2 flex-1">
+                                          {levelAbilities.map(ability => (
+                                            <span 
+                                              key={ability.id}
+                                              className="text-sm bg-primary/20 text-primary px-2 py-1 rounded"
+                                            >
+                                              {ability.name}
+                                            </span>
+                                          ))}
+                                        </div>
+                                        <Icon name="Pencil" size={16} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-muted-foreground" />
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center justify-between w-full">
+                                        <span className="text-muted-foreground">-</span>
+                                        <Icon name="Pencil" size={16} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
                               </TableCell>
                             </TableRow>
