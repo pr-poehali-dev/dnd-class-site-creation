@@ -159,8 +159,7 @@ const Index = () => {
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-muted/50">
-                          <TableHead className="font-bold text-center">Уровень</TableHead>
-                          <TableHead className="font-bold text-center">Бонус мастерства</TableHead>
+                          <TableHead className="font-bold text-center w-32">Уровень</TableHead>
                           <TableHead className="font-bold">Особенности</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -174,9 +173,6 @@ const Index = () => {
                             >
                               <TableCell className="text-center font-semibold text-primary">
                                 {row.level}
-                              </TableCell>
-                              <TableCell className="text-center font-mono">
-                                +{row.proficiencyBonus}
                               </TableCell>
                               <TableCell>
                                 {levelAbilities.length > 0 ? (
