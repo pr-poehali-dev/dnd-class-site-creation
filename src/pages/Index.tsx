@@ -100,6 +100,14 @@ const Index = () => {
           <p className="text-muted-foreground">Создай свой уникальный класс персонажа</p>
         </div>
 
+        <div className="flex justify-center mb-6">
+          <img 
+            src="https://cdn.poehali.dev/files/a05debd9-85ad-4834-80f4-25099a0b9296.png" 
+            alt="D&D Character" 
+            className="w-96 h-96 object-contain rounded-lg"
+          />
+        </div>
+
         <Card className="border-primary/20 bg-card/50 backdrop-blur">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
