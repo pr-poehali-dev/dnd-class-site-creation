@@ -24,7 +24,7 @@ interface Ability {
 
 const Index = () => {
   const [className, setClassName] = useState('Антимаг');
-  const [classDescription, setClassDescription] = useState('');
+  const [classDescription, setClassDescription] = useState('Неуловимый Убийца Колдунов что проявляет полностью свой потенциал в схватках где он способен оставаться неприкасаемым');
   const [abilities, setAbilities] = useState<Ability[]>([]);
   const [newAbilityName, setNewAbilityName] = useState('');
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
