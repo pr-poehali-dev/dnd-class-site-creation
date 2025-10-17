@@ -31,11 +31,13 @@ const Index = () => {
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
 
-  const levelTable: LevelData[] = Array.from({ length: 20 }, (_, i) => ({
-    level: i + 1,
-    proficiencyBonus: Math.floor((i + 1 - 1) / 4) + 2,
+  const visibleLevels = [3, 5, 9, 12, 15, 17, 18, 20];
+  
+  const levelTable: LevelData[] = visibleLevels.map(level => ({
+    level,
+    proficiencyBonus: Math.floor((level - 1) / 4) + 2,
     features: abilities
-      .filter(a => a.level === i + 1)
+      .filter(a => a.level === level)
       .map(a => a.name)
       .join(', ') || '-'
   }));
