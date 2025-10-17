@@ -35,7 +35,8 @@ const Index = () => {
     5: '·Блинк-Реакция',
     9: '·Выжигание\n·Взрыв Маны',
     12: '·Магические Шрамы',
-    15: '·Контрспелл'
+    15: '·Контрспелл',
+    17: '·Сконцентрированный-Блинк'
   });
   const [editingLevel, setEditingLevel] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
