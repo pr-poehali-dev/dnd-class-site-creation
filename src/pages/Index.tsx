@@ -22,6 +22,7 @@ interface Ability {
   level: number;
   spiritCost?: number;
   conditions?: string;
+  range?: string;
 }
 
 const Index = () => {
@@ -42,6 +43,7 @@ const Index = () => {
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
   const [newAbilitySpiritCost, setNewAbilitySpiritCost] = useState<number>(0);
   const [newAbilityConditions, setNewAbilityConditions] = useState('');
+  const [newAbilityRange, setNewAbilityRange] = useState('');
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
   const [customFeatures, setCustomFeatures] = useState<Record<number, string>>({
     3: '·Концентрация\n·Блинк',
@@ -94,13 +96,15 @@ const Index = () => {
         description: newAbilityDesc,
         level: newAbilityLevel,
         spiritCost: newAbilitySpiritCost,
-        conditions: newAbilityConditions
+        conditions: newAbilityConditions,
+        range: newAbilityRange
       }]);
       setNewAbilityName('');
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
       setNewAbilitySpiritCost(0);
       setNewAbilityConditions('');
+      setNewAbilityRange('');
     }
   };
 
@@ -111,13 +115,14 @@ const Index = () => {
     setNewAbilityLevel(ability.level);
     setNewAbilitySpiritCost(ability.spiritCost || 0);
     setNewAbilityConditions(ability.conditions || '');
+    setNewAbilityRange(ability.range || '');
   };
 
   const saveEditAbility = () => {
     if (editingAbility && newAbilityName && newAbilityDesc) {
       setAbilities(prev => prev.map(a => 
         a.id === editingAbility.id 
-          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel, spiritCost: newAbilitySpiritCost, conditions: newAbilityConditions }
+          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel, spiritCost: newAbilitySpiritCost, conditions: newAbilityConditions, range: newAbilityRange }
           : a
       ));
       setEditingAbility(null);
@@ -126,6 +131,7 @@ const Index = () => {
       setNewAbilityLevel(1);
       setNewAbilitySpiritCost(0);
       setNewAbilityConditions('');
+      setNewAbilityRange('');
     }
   };
 
@@ -136,6 +142,7 @@ const Index = () => {
     setNewAbilityLevel(1);
     setNewAbilitySpiritCost(0);
     setNewAbilityConditions('');
+    setNewAbilityRange('');
   };
 
   const removeAbility = (id: string) => {
@@ -362,7 +369,7 @@ const Index = () => {
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="spiritCost">Трата Духа</Label>
                     <Input
@@ -382,6 +389,16 @@ const Index = () => {
                       placeholder="Например: 1 раз в ход, реакция..."
                       value={newAbilityConditions}
                       onChange={(e) => setNewAbilityConditions(e.target.value)}
+                      className="bg-background/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="range">Дальность применения</Label>
+                    <Input
+                      id="range"
+                      placeholder="Например: 30 метров, касание..."
+                      value={newAbilityRange}
+                      onChange={(e) => setNewAbilityRange(e.target.value)}
                       className="bg-background/50"
                     />
                   </div>
@@ -445,6 +462,11 @@ const Index = () => {
                                   {ability.conditions && (
                                     <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
                                       {ability.conditions}
+                                    </span>
+                                  )}
+                                  {ability.range && (
+                                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                                      {ability.range}
                                     </span>
                                   )}
                                 </div>
