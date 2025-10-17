@@ -23,7 +23,7 @@ interface Ability {
 }
 
 const Index = () => {
-  const [className, setClassName] = useState('');
+  const [className, setClassName] = useState('Антимаг');
   const [classDescription, setClassDescription] = useState('');
   const [abilities, setAbilities] = useState<Ability[]>([]);
   const [newAbilityName, setNewAbilityName] = useState('');
