@@ -29,6 +29,7 @@ const Index = () => {
   const [newAbilityName, setNewAbilityName] = useState('');
   const [newAbilityDesc, setNewAbilityDesc] = useState('');
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
+  const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
 
   const levelTable: LevelData[] = Array.from({ length: 20 }, (_, i) => ({
     level: i + 1,
@@ -51,6 +52,34 @@ const Index = () => {
       setNewAbilityDesc('');
       setNewAbilityLevel(1);
     }
+  };
+
+  const startEditAbility = (ability: Ability) => {
+    setEditingAbility(ability);
+    setNewAbilityName(ability.name);
+    setNewAbilityDesc(ability.description);
+    setNewAbilityLevel(ability.level);
+  };
+
+  const saveEditAbility = () => {
+    if (editingAbility && newAbilityName && newAbilityDesc) {
+      setAbilities(prev => prev.map(a => 
+        a.id === editingAbility.id 
+          ? { ...a, name: newAbilityName, description: newAbilityDesc, level: newAbilityLevel }
+          : a
+      ));
+      setEditingAbility(null);
+      setNewAbilityName('');
+      setNewAbilityDesc('');
+      setNewAbilityLevel(1);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingAbility(null);
+    setNewAbilityName('');
+    setNewAbilityDesc('');
+    setNewAbilityLevel(1);
   };
 
   const removeAbility = (id: string) => {
@@ -230,10 +259,23 @@ const Index = () => {
                   />
                 </div>
 
-                <Button onClick={addAbility} className="w-full" size="lg">
-                  <Icon name="Plus" size={20} className="mr-2" />
-                  Добавить способность
-                </Button>
+                {editingAbility ? (
+                  <div className="flex gap-2">
+                    <Button onClick={saveEditAbility} className="flex-1" size="lg">
+                      <Icon name="Check" size={20} className="mr-2" />
+                      Сохранить изменения
+                    </Button>
+                    <Button onClick={cancelEdit} variant="outline" size="lg">
+                      <Icon name="X" size={20} className="mr-2" />
+                      Отмена
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={addAbility} className="w-full" size="lg">
+                    <Icon name="Plus" size={20} className="mr-2" />
+                    Добавить способность
+                  </Button>
+                )}
               </CardContent>
             </Card>
 
@@ -271,14 +313,24 @@ const Index = () => {
                                 </p>
                               </div>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => removeAbility(ability.id)}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                            >
-                              <Icon name="Trash2" size={16} />
-                            </Button>
+                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => startEditAbility(ability)}
+                                className="flex-shrink-0"
+                              >
+                                <Icon name="Pencil" size={16} />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => removeAbility(ability.id)}
+                                className="flex-shrink-0"
+                              >
+                                <Icon name="Trash2" size={16} />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       ))}
