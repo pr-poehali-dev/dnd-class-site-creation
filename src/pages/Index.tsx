@@ -31,7 +31,8 @@ const Index = () => {
   const [newAbilityLevel, setNewAbilityLevel] = useState<number>(1);
   const [editingAbility, setEditingAbility] = useState<Ability | null>(null);
   const [customFeatures, setCustomFeatures] = useState<Record<number, string>>({
-    3: '·Концентрация\n·Блинк'
+    3: '·Концентрация\n·Блинк',
+    5: '·Блинк-Реакция'
   });
   const [editingLevel, setEditingLevel] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
