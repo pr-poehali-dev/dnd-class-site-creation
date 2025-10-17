@@ -36,7 +36,8 @@ const Index = () => {
     9: '·Выжигание\n·Взрыв Маны',
     12: '·Магические Шрамы',
     15: '·Контрспелл',
-    17: '·Сконцентрированный-Блинк'
+    17: '·Сконцентрированный-Блинк',
+    18: '·Холодный Ум'
   });
   const [editingLevel, setEditingLevel] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
